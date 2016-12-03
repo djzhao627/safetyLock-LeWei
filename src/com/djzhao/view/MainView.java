@@ -204,7 +204,7 @@ public class MainView extends JFrame {
 		contentPane.add(labelDate);
 		labelDate.setColumns(10);
 
-		JLabel label_3 = new JLabel("\u552F\u4E00\u7F16\u53F7\uFF1A");
+		JLabel label_3 = new JLabel("\u4EA7\u54C1\u7F16\u53F7\uFF1A");
 		label_3.setFont(new Font("ËÎÌו", Font.PLAIN, 12));
 		label_3.setBounds(10, 159, 70, 15);
 		contentPane.add(label_3);
