@@ -13,8 +13,8 @@ public class Test {
 		OperaterExcel o = new OperaterExcel();
 		try {
 			List<PrintInfo> list = ExcelUtil.readExcel(new File("E:\\WindowsDesktop\\LeWei\\外包\\安全锁\\班次计划.xls"));
-//			System.out.println(list);
-			
+			System.out.println(list);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

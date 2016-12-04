@@ -65,7 +65,7 @@ public class SqliteDao {
 			throw new RuntimeException("无法获取标签的位置数据！");
 		}
 	}
-	
+
 	/**
 	 * 更新标签位置。
 	 * 
@@ -81,7 +81,7 @@ public class SqliteDao {
 			throw new RuntimeException("无法更新标签的位置数据！");
 		}
 	}
-	
+
 	/**
 	 * 获取默认打印机。
 	 * 
@@ -96,7 +96,7 @@ public class SqliteDao {
 			throw new RuntimeException("无法读取默认打印机！");
 		}
 	}
-	
+
 	/**
 	 * 设置默认打印机。
 	 * 
@@ -110,6 +110,68 @@ public class SqliteDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new RuntimeException("无法更新默认打印机！");
+		}
+	}
+
+	/**
+	 * 设置默认线别。
+	 * 
+	 * @param index
+	 * @return
+	 */
+	public boolean setDefaultSelectedLine(int index) {
+		sql = "update defaultSettings set value = ? where key = 'defaultSelectedLine'";
+		try {
+			return queryRunner.update(sql, index) > 0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("无法更新默认线别！");
+		}
+	}
+
+	/**
+	 * 获取默认线别。
+	 * 
+	 * @return 线别索引
+	 */
+	public String getDefaultSelectedLine() {
+		sql = "select value from defaultSettings where key = 'defaultSelectedLine'";
+		try {
+			return queryRunner.query(sql, new ScalarHandler<String>());
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("无法读取默认线别！");
+		}
+	}
+
+	/**
+	 * 更新标签字体大小。
+	 * 
+	 * @param size
+	 * @return
+	 */
+	public boolean setFontSize(int size) {
+		sql = "update defaultSettings set value = ? where key = 'fontSize'";
+		try {
+			return queryRunner.update(sql, size) > 0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("无法更新标签字体大小！");
+		}
+	}
+	
+	/**
+	 * 获取标签字体大小。
+	 * 
+	 * @return
+	 */
+	public String getFontSize() {
+		sql = "select value from defaultSettings where key = 'fontSize'";
+		try {
+			return queryRunner.query(sql, new ScalarHandler<String>());
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("无法获取默认字体大小！");
 		}
 	}
 }

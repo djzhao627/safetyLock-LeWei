@@ -1,26 +1,22 @@
 package com.djzhao.view;
 
+import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
+import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-
-import java.awt.Font;
-import java.awt.HeadlessException;
-
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import com.djzhao.dao.SqliteDao;
 import com.djzhao.model.Adjustment;
-
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.List;
-import java.awt.event.WindowFocusListener;
-import java.awt.event.WindowEvent;
 
 /**
  * 调整标签位置。
@@ -35,13 +31,20 @@ public class AdjustLabelPositionView extends JFrame {
 	private static JTextField number_top;
 	private static JTextField number_left;
 	private static AdjustLabelPositionView alp = null;
+	private static JTextField fontSize;
 
 	public static AdjustLabelPositionView GetAdjustLabelPositionView() {
 		if (alp == null) {
 			alp = new AdjustLabelPositionView();
 		}
 		// 更新标签信息。
-		updatePosition();
+		try {
+			updatePosition();
+			updateFontSize();
+		} catch (Exception e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, e.getMessage());
+		}
 		return alp;
 	}
 
@@ -67,52 +70,52 @@ public class AdjustLabelPositionView extends JFrame {
 
 		JLabel lblNewLabel = new JLabel("\u751F\u4EA7\u65E5\u671F\uFF1A");
 		lblNewLabel.setFont(new Font("SimSun", Font.PLAIN, 12));
-		lblNewLabel.setBounds(45, 70, 84, 15);
+		lblNewLabel.setBounds(45, 53, 84, 15);
 		getContentPane().add(lblNewLabel);
 
 		JLabel label = new JLabel("\u4E0A\u8FB9\u8DDD");
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		label.setFont(new Font("SimSun", Font.PLAIN, 12));
-		label.setBounds(140, 30, 65, 15);
+		label.setBounds(139, 25, 65, 15);
 		getContentPane().add(label);
 
 		JLabel label_1 = new JLabel("\u5DE6\u8FB9\u8DDD");
 		label_1.setHorizontalAlignment(SwingConstants.CENTER);
 		label_1.setFont(new Font("SimSun", Font.PLAIN, 12));
-		label_1.setBounds(260, 30, 66, 15);
+		label_1.setBounds(259, 25, 66, 15);
 		getContentPane().add(label_1);
 
 		date_top = new JTextField();
 		date_top.setText("0");
 		date_top.setHorizontalAlignment(SwingConstants.CENTER);
-		date_top.setBounds(139, 67, 66, 21);
+		date_top.setBounds(139, 50, 66, 21);
 		getContentPane().add(date_top);
 		date_top.setColumns(10);
 
 		date_left = new JTextField();
 		date_left.setText("0");
 		date_left.setHorizontalAlignment(SwingConstants.CENTER);
-		date_left.setBounds(260, 67, 66, 21);
+		date_left.setBounds(260, 50, 66, 21);
 		getContentPane().add(date_left);
 		date_left.setColumns(10);
 
 		JLabel label_2 = new JLabel("\u552F\u4E00\u7F16\u53F7\uFF1A");
 		label_2.setFont(new Font("宋体", Font.PLAIN, 12));
-		label_2.setBounds(45, 123, 84, 15);
+		label_2.setBounds(45, 99, 84, 15);
 		getContentPane().add(label_2);
 
 		number_top = new JTextField();
 		number_top.setText("0");
 		number_top.setHorizontalAlignment(SwingConstants.CENTER);
 		number_top.setColumns(10);
-		number_top.setBounds(139, 120, 66, 21);
+		number_top.setBounds(139, 96, 66, 21);
 		getContentPane().add(number_top);
 
 		number_left = new JTextField();
 		number_left.setText("0");
 		number_left.setHorizontalAlignment(SwingConstants.CENTER);
 		number_left.setColumns(10);
-		number_left.setBounds(260, 120, 66, 21);
+		number_left.setBounds(260, 96, 66, 21);
 		getContentPane().add(number_left);
 
 		JButton button = new JButton("\u63D0\u4EA4");
@@ -121,12 +124,28 @@ public class AdjustLabelPositionView extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 
 				try {
-					String top1 = date_top.getText().toString().isEmpty() ? "0" : date_top.getText().toString();
-					String left1 = date_left.getText().toString().isEmpty() ? "0" : date_left.getText().toString();
-					String top2 = number_top.getText().toString().isEmpty() ? "0" : number_top.getText().toString();
-					String left2 = number_left.getText().toString().isEmpty() ? "0" : number_left.getText().toString();
+					String top1 = date_top.getText().toString().trim().isEmpty() ? "0" : date_top.getText().toString();
+					String left1 = date_left.getText().toString().trim().isEmpty() ? "0"
+							: date_left.getText().toString();
+					String top2 = number_top.getText().toString().trim().isEmpty() ? "0"
+							: number_top.getText().toString();
+					String left2 = number_left.getText().toString().trim().isEmpty() ? "0"
+							: number_left.getText().toString();
 
 					SqliteDao sd = new SqliteDao();
+					
+					int size = 0;
+					try {
+						size = Integer.parseInt(fontSize.getText().toString().trim());
+					} catch (Exception e1) {
+						e1.printStackTrace();
+						JOptionPane.showMessageDialog(null, "输入的数字有误！");
+						return;
+					}
+					
+					if (!sd.setFontSize(size)) {
+						JOptionPane.showMessageDialog(null, "无法更新标签字体大小！");
+					}
 					// 提交新的边距
 					Adjustment adjustment = new Adjustment();
 					adjustment.setName("date");
@@ -170,6 +189,26 @@ public class AdjustLabelPositionView extends JFrame {
 		button_1.setBounds(140, 175, 65, 23);
 		getContentPane().add(button_1);
 
+		JLabel label_3 = new JLabel("\u5B57\u4F53\u5927\u5C0F\uFF1A");
+		label_3.setBounds(45, 140, 84, 15);
+		getContentPane().add(label_3);
+
+		fontSize = new JTextField();
+		fontSize.setText("6");
+		fontSize.setHorizontalAlignment(SwingConstants.CENTER);
+		fontSize.setBounds(139, 137, 66, 21);
+		getContentPane().add(fontSize);
+		fontSize.setColumns(10);
+
+	}
+
+	/**
+	 * 更新标签字体大小。
+	 */
+	private static void updateFontSize() {
+		SqliteDao sd = new SqliteDao();
+		String size = sd.getFontSize();
+		fontSize.setText(size);
 	}
 
 	/**
