@@ -60,12 +60,15 @@ public class MainView extends JFrame {
 	JFileChooser jfc = new JFileChooser();
 	private static DefaultComboBoxModel<String> aModel = new DefaultComboBoxModel<>();
 	private JComboBox<String> printerSelector;
-	private static JComboBox<String> lineName;
+	// private static JComboBox<String> lineName;
 	private JButton btnPrint;
 	private JButton btnChoose;
 	private JButton btnAdjust;
 	private JButton btnReprint;
 	private JLabel printProcess;
+	private JTextField labelProductName;
+	private JTextField labelType;
+	private JTextField labelOther;
 
 	/**
 	 * Launch the application.
@@ -76,7 +79,7 @@ public class MainView extends JFrame {
 				try {
 					MainView frame = new MainView();
 					frame.setVisible(true);
-					getDefaultSelectedLine();
+					// getDefaultSelectedLine();
 					setPrinterModel();
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -127,16 +130,16 @@ public class MainView extends JFrame {
 	/**
 	 * 获取默认线别。
 	 */
-	private static void getDefaultSelectedLine() {
-		try {
-			SqliteDao sd = new SqliteDao();
-			lineName.setSelectedIndex(Integer.parseInt(sd.getDefaultSelectedLine().trim()));
-			Constants.SELECTEDLINEINDEX = lineName.getSelectedIndex();
-		} catch (Exception e) {
-			e.printStackTrace();
-			JOptionPane.showMessageDialog(null, e.getMessage());
-		}
-	}
+	// private static void getDefaultSelectedLine() {
+	// try {
+	// SqliteDao sd = new SqliteDao();
+	// lineName.setSelectedIndex(Integer.parseInt(sd.getDefaultSelectedLine().trim()));
+	// Constants.SELECTEDLINEINDEX = lineName.getSelectedIndex();
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// JOptionPane.showMessageDialog(null, e.getMessage());
+	// }
+	// }
 
 	/**
 	 * Create the frame.
@@ -151,7 +154,7 @@ public class MainView extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		double screenWidth = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
 		double screenHeight = Toolkit.getDefaultToolkit().getScreenSize().getHeight();
-		setBounds((int) ((screenWidth - 400) / 2), (int) ((screenHeight - 300) / 2), 400, 300);
+		setBounds((int) ((screenWidth - 400) / 2), (int) ((screenHeight - 300) / 2), 400, 334);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -159,7 +162,7 @@ public class MainView extends JFrame {
 
 		JLabel label = new JLabel("\u6570\u636E\u6587\u4EF6\uFF1A");
 		label.setFont(new Font("SimSun", Font.PLAIN, 12));
-		label.setBounds(10, 10, 70, 15);
+		label.setBounds(10, 12, 70, 15);
 		contentPane.add(label);
 
 		dataFilePath = new JTextField();
@@ -167,7 +170,7 @@ public class MainView extends JFrame {
 		dataFilePath.setText(Constants.EXCELPATH);
 		dataFilePath.setToolTipText("\u6587\u4EF6\u76EE\u5F55");
 		dataFilePath.setFont(new Font("宋体", Font.PLAIN, 11));
-		dataFilePath.setBounds(90, 7, 200, 21);
+		dataFilePath.setBounds(90, 10, 200, 21);
 		contentPane.add(dataFilePath);
 		dataFilePath.setColumns(10);
 
@@ -206,59 +209,58 @@ public class MainView extends JFrame {
 		contentPane.add(btnChoose);
 
 		JSeparator separator = new JSeparator();
-		separator.setBounds(10, 230, 374, 2);
+		separator.setBounds(10, 260, 374, 2);
 		contentPane.add(separator);
 
-		JLabel label_1 = new JLabel("\u7EBF    \u522B\uFF1A");
+		JLabel label_1 = new JLabel("\u4EA7\u54C1\u540D\u79F0\uFF1A");
 		label_1.setFont(new Font("SimSun", Font.PLAIN, 12));
-		label_1.setBounds(10, 57, 70, 15);
+		label_1.setBounds(10, 58, 70, 15);
 		contentPane.add(label_1);
 
-		lineName = new JComboBox<String>();
-		lineName.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				// 设置默认线别
-				if (e.getStateChange() == ItemEvent.SELECTED) {
-					Constants.SELECTEDLINEINDEX = lineName.getSelectedIndex();
-					SqliteDao sqliteDao = new SqliteDao();
-					try {
-						sqliteDao.setDefaultSelectedLine(lineName.getSelectedIndex());
-					} catch (Exception e1) {
-						e1.printStackTrace();
-						JOptionPane.showMessageDialog(null, e1.getMessage());
-					}
-				}
-			}
-		});
-		lineName.setFont(new Font("SimSun", Font.PLAIN, 12));
-		lineName.setModel(new DefaultComboBoxModel<String>(Constants.LINENAME));
-		lineName.setBounds(90, 54, 200, 21);
-		contentPane.add(lineName);
+		// lineName = new JComboBox<String>();
+		// lineName.addItemListener(new ItemListener() {
+		// public void itemStateChanged(ItemEvent e) {
+		// // 设置默认线别
+		// if (e.getStateChange() == ItemEvent.SELECTED) {
+		// Constants.SELECTEDLINEINDEX = lineName.getSelectedIndex();
+		// SqliteDao sqliteDao = new SqliteDao();
+		// try {
+		// sqliteDao.setDefaultSelectedLine(lineName.getSelectedIndex());
+		// } catch (Exception e1) {
+		// e1.printStackTrace();
+		// JOptionPane.showMessageDialog(null, e1.getMessage());
+		// }
+		// }
+		// }
+		// });
+		// lineName.setFont(new Font("SimSun", Font.PLAIN, 12));
+		// lineName.setModel(new
+		// DefaultComboBoxModel<String>(Constants.LINENAME));
+		// lineName.setBounds(90, 54, 200, 21);
+		// contentPane.add(lineName);
 
 		JLabel label_2 = new JLabel("\u751F\u4EA7\u65E5\u671F\uFF1A");
 		label_2.setFont(new Font("宋体", Font.PLAIN, 12));
-		label_2.setBounds(10, 106, 70, 15);
+		label_2.setBounds(10, 128, 70, 15);
 		contentPane.add(label_2);
 
 		labelDate = new JTextField();
-		labelDate.setText("date");
 		labelDate.setOpaque(false);
 		labelDate.setEnabled(false);
-		labelDate.setBounds(90, 104, 200, 21);
+		labelDate.setBounds(90, 125, 200, 21);
 		contentPane.add(labelDate);
 		labelDate.setColumns(10);
 
 		JLabel label_3 = new JLabel("\u4EA7\u54C1\u7F16\u53F7\uFF1A");
 		label_3.setFont(new Font("宋体", Font.PLAIN, 12));
-		label_3.setBounds(10, 159, 70, 15);
+		label_3.setBounds(10, 163, 70, 15);
 		contentPane.add(label_3);
 
 		labelSer = new JTextField();
-		labelSer.setText("serialNumber");
 		labelSer.setOpaque(false);
 		labelSer.setEnabled(false);
 		labelSer.setColumns(10);
-		labelSer.setBounds(90, 157, 200, 21);
+		labelSer.setBounds(90, 160, 200, 21);
 		contentPane.add(labelSer);
 
 		btnAdjust = new JButton("\u8C03\u6574\u6807\u7B7E");
@@ -271,13 +273,13 @@ public class MainView extends JFrame {
 		});
 		btnAdjust.setFont(new Font("SimSun", Font.PLAIN, 12));
 		btnAdjust.setOpaque(false);
-		btnAdjust.setBounds(10, 242, 93, 23);
+		btnAdjust.setBounds(10, 272, 93, 23);
 		contentPane.add(btnAdjust);
 
 		btnReprint = new JButton("\u8865\u6253\u5370");
 		btnReprint.setFont(new Font("SimSun", Font.PLAIN, 12));
 		btnReprint.setOpaque(false);
-		btnReprint.setBounds(113, 242, 93, 23);
+		btnReprint.setBounds(113, 272, 93, 23);
 		contentPane.add(btnReprint);
 
 		btnPrint = new JButton("\u6253\u5370");
@@ -291,15 +293,14 @@ public class MainView extends JFrame {
 					goPrint().execute();
 				}
 			}
-
 		});
 		btnPrint.setFont(new Font("SimSun", Font.PLAIN, 12));
-		btnPrint.setBounds(304, 197, 80, 23);
+		btnPrint.setBounds(304, 227, 80, 23);
 		contentPane.add(btnPrint);
 
 		JLabel label_4 = new JLabel("\u6253 \u5370 \u673A\uFF1A");
 		label_4.setFont(new Font("宋体", Font.PLAIN, 12));
-		label_4.setBounds(10, 201, 70, 15);
+		label_4.setBounds(10, 231, 70, 15);
 		contentPane.add(label_4);
 
 		printerSelector = new JComboBox<String>();
@@ -320,14 +321,42 @@ public class MainView extends JFrame {
 		printerSelector.setForeground(Color.BLACK);
 		printerSelector.setFont(new Font("宋体", Font.ITALIC, 12));
 		printerSelector.setModel(aModel);
-		printerSelector.setBounds(90, 199, 200, 21);
+		printerSelector.setBounds(90, 229, 200, 21);
 		contentPane.add(printerSelector);
 
 		printProcess = new JLabel("");
 		printProcess.setFont(new Font("宋体", Font.ITALIC, 12));
 		printProcess.setHorizontalAlignment(SwingConstants.RIGHT);
-		printProcess.setBounds(279, 250, 105, 15);
+		printProcess.setBounds(279, 280, 105, 15);
 		contentPane.add(printProcess);
+		
+		labelProductName = new JTextField();
+		labelProductName.setEditable(false);
+		labelProductName.setBounds(90, 55, 200, 21);
+		contentPane.add(labelProductName);
+		labelProductName.setColumns(10);
+		
+		labelType = new JTextField();
+		labelType.setEditable(false);
+		labelType.setColumns(10);
+		labelType.setBounds(90, 90, 200, 21);
+		contentPane.add(labelType);
+		
+		JLabel label_5 = new JLabel("\u7C7B    \u578B\uFF1A");
+		label_5.setFont(new Font("宋体", Font.PLAIN, 12));
+		label_5.setBounds(10, 93, 70, 15);
+		contentPane.add(label_5);
+		
+		labelOther = new JTextField();
+		labelOther.setEditable(false);
+		labelOther.setColumns(10);
+		labelOther.setBounds(90, 195, 200, 21);
+		contentPane.add(labelOther);
+		
+		JLabel lblCertificate = new JLabel("\u8BC1    \u4E66\uFF1A");
+		lblCertificate.setFont(new Font("宋体", Font.PLAIN, 12));
+		lblCertificate.setBounds(10, 198, 70, 15);
+		contentPane.add(lblCertificate);
 	}
 
 	/**
@@ -336,7 +365,7 @@ public class MainView extends JFrame {
 	private void setUnableOperator() {
 		dataFilePath.setEnabled(false);
 		printerSelector.setEnabled(false);
-		lineName.setEnabled(false);
+		// lineName.setEnabled(false);
 		btnAdjust.setEnabled(false);
 		btnChoose.setEnabled(false);
 		btnPrint.setEnabled(false);
@@ -349,7 +378,7 @@ public class MainView extends JFrame {
 	private void setEnableOperator() {
 		dataFilePath.setEnabled(true);
 		printerSelector.setEnabled(true);
-		lineName.setEnabled(true);
+		// lineName.setEnabled(true);
 		btnAdjust.setEnabled(true);
 		btnChoose.setEnabled(true);
 		btnPrint.setEnabled(true);
@@ -389,7 +418,8 @@ public class MainView extends JFrame {
 						return null;
 					}
 					// 设置已选线别
-					Constants.SELECTEDLINEINDEX = lineName.getSelectedIndex();
+					// Constants.SELECTEDLINEINDEX =
+					// lineName.getSelectedIndex();
 					// 获取信息
 					List<PrintInfo> list = ExcelUtil.readExcel(path);
 					// System.out.println(list);
@@ -397,19 +427,26 @@ public class MainView extends JFrame {
 						// 实例化打印机对象
 						PrintfLabel print = new PrintfLabel(printerSelector.getSelectedItem().toString());
 						
-						// 设置边距和字体
+						// 设置边距
 						SqliteDao sd = new SqliteDao();
 						try {
 							List<Adjustment> position = sd.getPosition();
 							Constants.LABELDATELEFT = position.get(0).getLeft();
 							Constants.LABELDATETOP = position.get(0).getTop();
 							Constants.LABELSERLEFT = position.get(1).getLeft();
-							Constants.LABELSERLEFT = position.get(1).getTop();
+							Constants.LABELSERTOP = position.get(1).getTop();
+							Constants.LABELPRODUCTNAMELEFT = position.get(2).getLeft();
+							Constants.LABELPRODUCTNAMETOP = position.get(2).getTop();
+							Constants.LABELTYPELEFT = position.get(3).getLeft();
+							Constants.LABELTYPETOP = position.get(3).getTop();
+							Constants.LABELOTHERLEFT = position.get(4).getLeft();
+							Constants.LABELOTHERTOP = position.get(4).getTop();
 						} catch (Exception e) {
 							e.printStackTrace();
 							JOptionPane.showMessageDialog(null, "设置边距出现问题：\n" + e.getMessage());
 						}
 						
+						// 设置字体大小
 						try {
 							Constants.LABELFONTSIZE = Integer.parseInt(sd.getFontSize());
 						} catch (Exception e) {
@@ -418,6 +455,10 @@ public class MainView extends JFrame {
 						}
 						
 						for (PrintInfo p : list) {
+							
+							// 产生额外信息
+							print = generateOtherInfo(print, p);
+							
 							// 设置标签的日期
 							print.setProductDate(p.getProductDate());
 							
@@ -425,17 +466,24 @@ public class MainView extends JFrame {
 							MySQLDao md = new MySQLDao();
 							// 获取序列号
 							if (md.getSerialNumber(number)) {
-								// 显示生产日期
+								// label生产日期
 								labelDate.setText(p.getProductDate());
+								// label产品名
+								labelProductName.setText(print.getProductName());
+								// label类型
+								labelType.setText(print.getType());
+								// label证书
+								labelOther.setText(print.getOther());
 								for (int i = 0; i < number; i++) {
 									// 设置序列号
-									p.setSerialNumber(p.getLineName() + p.getClasses() + p.getProductDate()
+									p.setSerialNumber(formatWorkStation(p.getWorkStation()) + p.getClasses() + p.getProductDate()
 											+ serialNumberLengthFormat(Constants.SERIALNUMBER++));
-									// 显示产品编号
+									// label产品编号
 									labelSer.setText(p.getSerialNumber());
 									
 									// 设置 标签的编号
 									print.setSerialNumber(p.getSerialNumber());
+									
 									// 发送到打印机
 									print.printcode();
 									
@@ -456,9 +504,12 @@ public class MainView extends JFrame {
 				} catch (IOException e) {
 					e.printStackTrace();
 					JOptionPane.showMessageDialog(null, "IO异常！");
+				} catch (NullPointerException e) {
+					e.printStackTrace();
+					JOptionPane.showMessageDialog(null, "数据信息不匹配！");
 				} catch (Exception e) {
 					e.printStackTrace();
-					JOptionPane.showMessageDialog(null, e.getMessage());
+					JOptionPane.showMessageDialog(null, "ERROE : " + e.getMessage());
 				} finally {
 					// 设置为可以继续操作
 					setEnableOperator();
@@ -466,7 +517,106 @@ public class MainView extends JFrame {
 				return null;
 			}
 
+
 		};
 		return print;
+	}
+	
+	/**
+	 * 获取额外信息（产品名、类型、其他信息）
+	 * 
+	 * @param print
+	 * @param p
+	 * @return
+	 */
+	private PrintfLabel generateOtherInfo(PrintfLabel print, PrintInfo p) {
+		String S = p.getMaterialDescS();
+		String T = p.getMaterialDescT();
+		String C = p.getCustomer();
+		if (S.contains("AMD") && S.contains("挂件") && "通力".equals(C)){
+			print.setProductName("AMDL");
+			print.setType("层门锁");
+			print.setOther("TSX F34002220160004");
+		} else if (S.contains("AMD") && S.contains("门机") && S.contains("锁") && S.contains("R5/D10") && "通力".equals(C)) {
+			print.setProductName("AMDC-R1/R5");
+			print.setType("轿门锁");
+			print.setOther("TSX F34002220160005");
+		} else if (S.contains("AMD门机锁 R2") && "通力".equals(C)) {
+			print.setProductName("AMDC-R2");
+			print.setType("轿门锁");
+			print.setOther("TX F340-022-16 0015");
+		} else if (S.contains("AMD门机锁 R6") && "通力".equals(C)) {
+			print.setProductName("AMDC-R6");
+			print.setType("轿门锁");
+			print.setOther("TSX F34002220160003");
+		} else if ((S.contains("A-P") || S.contains("AP") || S.contains("Augusta")) && "".equals(C)) {
+			print.setProductName("3215-Augusta");
+			print.setType("层门锁");
+			print.setOther("TX F340-022-15 0021");
+		} else if ((S.contains("A-P") || S.contains("AP") || S.contains("A-A") || S.contains("AA")) && "通力".equals(C)) {
+			print.setProductName("3215-Augusta");
+			print.setType("层门锁");
+			print.setOther("TX F340-022-15 0022");
+		} else if ((S.contains("A-E") || S.contains("AE") || S.contains("Aug-ECO")) && "迅达".equals(C)) {
+			print.setProductName("Augusta- ECO 2.X");
+			print.setType("轿门锁");
+			print.setOther("TX F340-022-15 0096");
+		} else if ((S.contains("A-E") || S.contains("AE") || S.contains("Aug-ECO")) && "".equals(C)) {
+			print.setProductName("Augusta- ECO");
+			print.setType("轿门锁");
+			print.setOther("TSX F34002220160049");
+		} else if (S.contains("挂件") && S.contains("IP20") && T.contains("Hydra") && "".equals(C)) {
+			print.setProductName("3201-Hydra");
+			print.setType("层门锁");
+			print.setOther("TX F340-022-15 0056");
+		} else if (S.contains("挂件") && S.contains("IP54") && T.contains("Hydra") && "".equals(C)) {
+			print.setProductName("Hydra");
+			print.setType("层门锁");
+			print.setOther("TX F340-022-16 0013");
+		} else if ((S.contains("PEG") || S.contains("ECO") || S.contains("MID") || S.contains("SPA")) && S.contains("门机") && S.contains("锁") && S.contains("IP20") && "".equals(C)) {
+			print.setProductName("Hydra Plus /Pegasus");
+			print.setType("轿门锁");
+			print.setOther("TSX F34002220160002");
+		} else if ((S.contains("PEG") || S.contains("ECO") || S.contains("MID") || S.contains("SPA")) && S.contains("门机") && S.contains("锁") && S.contains("IP54") && "".equals(C)) {
+			print.setProductName("Hydra Plus /Pegasus");
+			print.setType("轿门锁");
+			print.setOther("TX F340-022-16 0012");
+		} else if (S.contains("ARM") && S.contains("锁") && "".equals(C)){
+			print.setProductName("Hydra ARM");
+			print.setType("轿门锁");
+			print.setOther("TX B340-022-15 0109");
+		} else if (S.contains("挂件") && S.contains("IP20") && T.contains("Pegasus") && "".equals(C)){
+			print.setProductName("3214-Pegasus");
+			print.setType("层门锁");
+			print.setOther("TX F340-022-15 0060");
+		} else if (S.contains("挂件") && S.contains("IP54") && T.contains("Pegasus") && "".equals(C)){
+			print.setProductName("Pegasus");
+			print.setType("层门锁");
+			print.setOther("TX F340-022-16 0011");
+		} else if ("".equals(C)){
+			print.setProductName("Augusta MD");
+			print.setType("层门锁");
+			print.setOther("TX F340-022-15 0120");
+		} else {
+			throw new RuntimeException("数据无法匹配！");
+		}
+		
+		return print;
+	}
+	
+	/**
+	 * 格式化产线名(工位),长度不足5位时末尾补零。
+	 * 
+	 * @param name 需要处理的字符串
+	 * @return 转换后的字符串
+	 */
+	public String formatWorkStation(String name) {
+		if (null == name) {
+			throw new RuntimeException("工位不能为空！");
+		}
+		while (name.length() < 5) {
+			name += "0";
+		}
+		return name;
 	}
 }

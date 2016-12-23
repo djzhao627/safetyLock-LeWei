@@ -48,7 +48,7 @@ public class OperaterExcel {
 
 				PrintInfo printInfo = new PrintInfo();
 				// Ïß±ð
-				printInfo.setLineName("AA.AP");
+				printInfo.setWorkStation("AA.AP");
 
 				// °à´Î
 				cell = readSheet.getCell(1, i);

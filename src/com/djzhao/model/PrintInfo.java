@@ -7,8 +7,8 @@ package com.djzhao.model;
  * @Date 2016年12月3日 下午3:57:46
  */
 public class PrintInfo {
-	/** 线别名称 */
-	private String lineName;
+	/** 线别名称(工位) */
+	private String workStation;
 
 	/** 班次 A早班，B中班，C晚班 */
 	private String classes;
@@ -28,19 +28,109 @@ public class PrintInfo {
 	/** 需要打印的数量 */
 	private int number;
 
+	/** 物料描述S **/
+	private String materialDescS;
+
+	/** 物料描述T **/
+	private String materialDescT;
+
+	/** 物料号S **/
+	private String materialNumberS;
+
+	/** 物料号T **/
+	private String materialNumberT;
+
+	/** 客户 **/
+	private String customer;
+
 	/**
-	 * @return the lineName
+	 * @return the workStation
 	 */
-	public String getLineName() {
-		return lineName;
+	public String getWorkStation() {
+		return workStation;
 	}
 
 	/**
-	 * @param lineName
-	 *            the lineName to set
+	 * @param workStation
+	 *            the workStation to set
 	 */
-	public void setLineName(String lineName) {
-		this.lineName = lineName;
+	public void setWorkStation(String workStation) {
+		this.workStation = workStation;
+	}
+
+	/**
+	 * @return the materialDescS
+	 */
+	public String getMaterialDescS() {
+		return materialDescS;
+	}
+
+	/**
+	 * @param materialDescS
+	 *            the materialDescS to set
+	 */
+	public void setMaterialDescS(String materialDescS) {
+		this.materialDescS = materialDescS;
+	}
+
+	/**
+	 * @return the materialDescT
+	 */
+	public String getMaterialDescT() {
+		return materialDescT;
+	}
+
+	/**
+	 * @param materialDescT
+	 *            the materialDescT to set
+	 */
+	public void setMaterialDescT(String materialDescT) {
+		this.materialDescT = materialDescT;
+	}
+
+	/**
+	 * @return the materialNumberS
+	 */
+	public String getMaterialNumberS() {
+		return materialNumberS;
+	}
+
+	/**
+	 * @param materialNumberS
+	 *            the materialNumberS to set
+	 */
+	public void setMaterialNumberS(String materialNumberS) {
+		this.materialNumberS = materialNumberS;
+	}
+
+	/**
+	 * @return the materialNumberT
+	 */
+	public String getMaterialNumberT() {
+		return materialNumberT;
+	}
+
+	/**
+	 * @param materialNumberT
+	 *            the materialNumberT to set
+	 */
+	public void setMaterialNumberT(String materialNumberT) {
+		this.materialNumberT = materialNumberT;
+	}
+
+	/**
+	 * @return the customer
+	 */
+	public String getCustomer() {
+		return customer;
+	}
+
+	/**
+	 * @param customer
+	 *            the customer to set
+	 */
+	public void setCustomer(String customer) {
+		this.customer = customer;
 	}
 
 	/**
@@ -140,9 +230,11 @@ public class PrintInfo {
 	 */
 	@Override
 	public String toString() {
-		return "PrintInfo [lineName=" + lineName + ", classes=" + classes + ", productDate=" + productDate
+		return "PrintInfo [workStation=" + workStation + ", classes=" + classes + ", productDate=" + productDate
 				+ ", salesNo=" + salesNo + ", salesRow=" + salesRow + ", serialNumber=" + serialNumber + ", number="
-				+ number + "]";
+				+ number + ", materialDescS=" + materialDescS + ", materialDescT=" + materialDescT
+				+ ", materialNumberS=" + materialNumberS + ", materialNumberT=" + materialNumberT + ", customer="
+				+ customer + "]";
 	}
 
 }

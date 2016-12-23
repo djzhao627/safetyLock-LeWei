@@ -43,22 +43,21 @@ public class ExcelUtil {
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd");
 
 	/** excel数据列 */
-	private static List<int[]> dataColum = new ArrayList<int[]>();
-
-	static {
-		// AA.AP
-		dataColum.add(new int[] { 0, 1, 11, 12, 14 });
-		// AMD
-		dataColum.add(new int[] { 0, 1, 10, 11, 13 });
-		// 35100
-		dataColum.add(new int[] { 0, 1, 9, 10, 19 });
-		// 35200
-		dataColum.add(new int[] { 0, 1, 9, 10, 19 });
-		// 35300
-		dataColum.add(new int[] { 0, 1, 8, 9, 12 });
-		// AMDDOP门机
-		dataColum.add(new int[] { 1, 4, 0, 8, 13 });
-	}
+	// private static List<int[]> dataColum = new ArrayList<int[]>();
+	// static {
+	// // AA.AP
+	// dataColum.add(new int[] { 0, 1, 11, 12, 14 });
+	// // AMD
+	// dataColum.add(new int[] { 0, 1, 10, 11, 13 });
+	// // 35100
+	// dataColum.add(new int[] { 0, 1, 9, 10, 19 });
+	// // 35200
+	// dataColum.add(new int[] { 0, 1, 9, 10, 19 });
+	// // 35300
+	// dataColum.add(new int[] { 0, 1, 8, 9, 12 });
+	// // AMDDOP门机
+	// dataColum.add(new int[] { 1, 4, 0, 8, 13 });
+	// }
 
 	/** 禁止实例化 */
 	private ExcelUtil() {
@@ -98,7 +97,6 @@ public class ExcelUtil {
 	 * @throws IOException
 	 * @throws FileNotFoundException
 	 */
-	@SuppressWarnings("deprecation")
 	private static List<PrintInfo> read2003Excel(File file) throws IOException {
 		List<PrintInfo> list = new ArrayList<PrintInfo>();
 		HSSFWorkbook hwb = new HSSFWorkbook(new FileInputStream(file));
@@ -114,41 +112,72 @@ public class ExcelUtil {
 			// String sheetName = sheet.getSheetName();
 
 			PrintInfo printInfo = new PrintInfo();
-			// 线别
-			printInfo.setLineName(Constants.LINENAME[Constants.SELECTEDLINEINDEX]);
+			
 
 			String str = "";
 			// 生产日期
-			cell = row.getCell(dataColum.get(Constants.SELECTEDLINEINDEX)[0]);
-			if (cell.getCellType() == HSSFCell.CELL_TYPE_STRING) {
-				str = cell.getStringCellValue().substring(2);
-			} else {
-				str = sdf.format(cell.getDateCellValue());
-			}
+			cell = row.getCell(0);
+			str = sdf.format(cell.getDateCellValue());
 			printInfo.setProductDate(str);
 
 			// 班次
-			cell = row.getCell(dataColum.get(Constants.SELECTEDLINEINDEX)[1]);
+			cell = row.getCell(1);
 			cell.setCellType(CellType.STRING);
 			str = cell.getStringCellValue().trim();
 			printInfo.setClasses(Constants.CLASSES.get(str));
 
+			// 线别（工位）
+			cell = row.getCell(2);
+			cell.setCellType(CellType.STRING);
+			str = cell.getStringCellValue().trim();
+			printInfo.setWorkStation(str);
+			
+			// 物料号T
+			cell = row.getCell(3);
+			cell.setCellType(CellType.STRING);
+			str = cell.getStringCellValue().trim();
+			printInfo.setMaterialNumberT(str);
+			
+			// 物料描述T
+			cell = row.getCell(4);
+			cell.setCellType(CellType.STRING);
+			str = cell.getStringCellValue().trim();
+			printInfo.setMaterialDescT(str);
+			
 			// 销售订单号
-			cell = row.getCell(dataColum.get(Constants.SELECTEDLINEINDEX)[2]);
+			cell = row.getCell(5);
 			cell.setCellType(CellType.STRING);
 			str = cell.getStringCellValue().trim();
 			printInfo.setSalesNo(str);
 
 			// 销售订单行
-			cell = row.getCell(dataColum.get(Constants.SELECTEDLINEINDEX)[3]);
+			cell = row.getCell(6);
 			cell.setCellType(CellType.STRING);
 			str = cell.getStringCellValue().trim();
 			printInfo.setSalesRow(str);
-
-			// 打印数量
-			cell = row.getCell(dataColum.get(Constants.SELECTEDLINEINDEX)[4]);
+			
+			// 物料号S
+			cell = row.getCell(7);
 			cell.setCellType(CellType.STRING);
 			str = cell.getStringCellValue().trim();
+			printInfo.setMaterialNumberS(str);
+
+			// 物料描述S
+			cell = row.getCell(8);
+			cell.setCellType(CellType.STRING);
+			str = cell.getStringCellValue().trim();
+			printInfo.setMaterialDescS(str);
+
+			// 打印数量
+			cell = row.getCell(9);
+			cell.setCellType(CellType.STRING);
+			str = cell.getStringCellValue().trim();
+			printInfo.setNumber(Integer.parseInt(str));
+			
+			// 客户
+			cell = row.getCell(10);
+			cell.setCellType(CellType.STRING);
+			str = null == cell.getStringCellValue() ? "" : cell.getStringCellValue();
 			printInfo.setNumber(Integer.parseInt(str));
 
 			// 加入集合
@@ -161,62 +190,106 @@ public class ExcelUtil {
 	/**
 	 * 读取Office 2007 excel
 	 */
-	@SuppressWarnings("deprecation")
-	private static List<PrintInfo> read2007Excel(File file) throws IOException {
-		List<PrintInfo> list = new ArrayList<PrintInfo>();
-		// 构造 XSSFWorkbook 对象，strPath 传入文件路径
-		XSSFWorkbook xwb = new XSSFWorkbook(new FileInputStream(file));
-		// 读取第一章表格内容
-		XSSFSheet sheet = xwb.getSheetAt(0);
-		XSSFRow row = null;
-		XSSFCell cell = null;
-		for (int i = 1; i <= sheet.getPhysicalNumberOfRows(); i++) {
-			row = sheet.getRow(i);
-			if (row == null) {
-				continue;
-			}
-			PrintInfo printInfo = new PrintInfo();
-			// 线别
-			printInfo.setLineName(Constants.LINENAME[Constants.SELECTEDLINEINDEX]);
+	private static List<PrintInfo> read2007Excel(File file){
+		try {
+			List<PrintInfo> list = new ArrayList<PrintInfo>();
+			// 构造 XSSFWorkbook 对象，strPath 传入文件路径
+			XSSFWorkbook xwb = new XSSFWorkbook(new FileInputStream(file));
+			// 读取第一章表格内容
+			XSSFSheet sheet = xwb.getSheetAt(0);
+			XSSFRow row = null;
+			XSSFCell cell = null;
+			for (int i = 1; i <= sheet.getPhysicalNumberOfRows(); i++) {
+				row = sheet.getRow(i);
+				if (row == null) {
+					continue;
+				}
+				PrintInfo printInfo = new PrintInfo();
 
-			String str = "";
-			// 生产日期
-			cell = row.getCell(dataColum.get(Constants.SELECTEDLINEINDEX)[0]);
-			if (cell.getCellType() == XSSFCell.CELL_TYPE_STRING) {
-				str = cell.getStringCellValue().substring(2);
-			} else {
+				String str = "";
+				// 生产日期
+				cell = row.getCell(0);
 				str = sdf.format(cell.getDateCellValue());
+				printInfo.setProductDate(str);
+
+				// 班次
+				cell = row.getCell(1);
+				cell.setCellType(CellType.STRING);
+				str = cell.getStringCellValue().trim();
+				printInfo.setClasses(Constants.CLASSES.get(str));
+
+				// 线别（工位）
+				cell = row.getCell(2);
+				cell.setCellType(CellType.STRING);
+				str = cell.getStringCellValue().trim();
+				printInfo.setWorkStation(str);
+				
+				// 物料号T
+				cell = row.getCell(3);
+				cell.setCellType(CellType.STRING);
+				str = cell.getStringCellValue().trim();
+				printInfo.setMaterialNumberT(str);
+				
+				// 物料描述T
+				cell = row.getCell(4);
+				cell.setCellType(CellType.STRING);
+				str = cell.getStringCellValue().trim();
+				printInfo.setMaterialDescT(str);
+				
+				// 销售订单号
+				cell = row.getCell(5);
+				cell.setCellType(CellType.STRING);
+				str = cell.getStringCellValue().trim();
+				printInfo.setSalesNo(str);
+
+				// 销售订单行
+				cell = row.getCell(6);
+				cell.setCellType(CellType.STRING);
+				str = cell.getStringCellValue().trim();
+				printInfo.setSalesRow(str);
+				
+				// 物料号S
+				cell = row.getCell(7);
+				cell.setCellType(CellType.STRING);
+				str = cell.getStringCellValue().trim();
+				printInfo.setMaterialNumberS(str);
+
+				// 物料描述S
+				cell = row.getCell(8);
+				cell.setCellType(CellType.STRING);
+				str = cell.getStringCellValue().trim();
+				printInfo.setMaterialDescS(str);
+
+				// 打印数量
+				cell = row.getCell(9);
+				cell.setCellType(CellType.STRING);
+				str = cell.getStringCellValue().trim();
+				printInfo.setNumber(Integer.parseInt(str));
+				
+				// 客户
+				cell = row.getCell(10);
+				if (cell == null) {
+					str = "";
+				} else {
+					cell.setCellType(CellType.STRING);
+					str = null == cell.getStringCellValue() ? "" : cell.getStringCellValue();
+				}
+				printInfo.setCustomer(str);
+
+				// 加入集合
+				list.add(printInfo);
 			}
-			printInfo.setProductDate(str);
-
-			// 班次
-			cell = row.getCell(dataColum.get(Constants.SELECTEDLINEINDEX)[1]);
-			cell.setCellType(CellType.STRING);
-			str = cell.getStringCellValue().trim();
-			printInfo.setClasses(Constants.CLASSES.get(str));
-
-			// 销售订单号
-			cell = row.getCell(dataColum.get(Constants.SELECTEDLINEINDEX)[2]);
-			cell.setCellType(CellType.STRING);
-			str = cell.getStringCellValue().trim();
-			printInfo.setSalesNo(str);
-
-			// 销售订单行
-			cell = row.getCell(dataColum.get(Constants.SELECTEDLINEINDEX)[3]);
-			cell.setCellType(CellType.STRING);
-			str = cell.getStringCellValue().trim();
-			printInfo.setSalesRow(str);
-
-			// 打印数量
-			cell = row.getCell(dataColum.get(Constants.SELECTEDLINEINDEX)[4]);
-			cell.setCellType(CellType.STRING);
-			str = cell.getStringCellValue().trim();
-			printInfo.setNumber(Integer.parseInt(str));
-
-			// 加入集合
-			list.add(printInfo);
+			xwb.close();
+			return list;
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			throw new RuntimeException("excel数据格式错误！");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			throw new RuntimeException("找不到文件！");
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new RuntimeException("找不到文件！");
 		}
-		xwb.close();
-		return list;
 	}
 }

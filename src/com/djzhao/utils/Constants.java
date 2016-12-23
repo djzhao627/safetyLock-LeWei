@@ -38,6 +38,24 @@ public class Constants {
 	/** 编号左边距 */
 	public static double LABELSERLEFT = 0;
 	
+	/** 产品名上边距 */
+	public static double LABELPRODUCTNAMETOP = 0;
+	
+	/** 产品名左边距 */
+	public static double LABELPRODUCTNAMELEFT = 0;
+	
+	/** 类型上边距 */
+	public static double LABELTYPETOP = 0;
+	
+	/** 类型左边距 */
+	public static double LABELTYPELEFT = 0;
+	
+	/** 其他上边距 */
+	public static double LABELOTHERTOP = 0;
+	
+	/** 其他左边距 */
+	public static double LABELOTHERLEFT = 0;
+	
 	/** 标签字体大小 */
 	public static int LABELFONTSIZE = 6;
 	

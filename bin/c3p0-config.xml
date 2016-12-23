@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xml>
+<c3p0-config>
+  <default-config name="sqlite_config">
+    <property name="jdbcUrl">jdbc:sqlite:C:\\config\\safetyLock\\safetyLock.db</property>
+    <property name="driverClass">org.sqlite.JDBC</property>
+    <property name="initialPoolSize">5</property>
+    <property name="maxPoolSize">20</property>
+    <property name="maxIdle">10000</property>
+
+    <!--
+    <user-overrides user="swaldman">
+      <property name="debugUnreturnedConnectionStackTraces">true</property>
+    </user-overrides>
+    -->
+
+  </default-config>
+
+
+  <named-config name="mysql_config">
+    <property name="jdbcUrl">jdbc:mysql://localhost:3306/safetyLock</property>
+    <property name="driverClass">com.mysql.jdbc.Driver</property>
+    <property name="user">root</property>
+    <property name="password">888888</property>
+    <property name="initialPoolSize">5</property>
+    <property name="maxPoolSize">20</property>
+    <property name="maxIdle">10000</property>
+   </named-config>
+
+
+</c3p0-config>

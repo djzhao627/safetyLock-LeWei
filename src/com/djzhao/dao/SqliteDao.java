@@ -57,7 +57,7 @@ public class SqliteDao {
 	 * @return
 	 */
 	public List<Adjustment> getPosition() {
-		sql = "select name, top, left from printAdjustment";
+		sql = "select _id, name, top, left from printAdjustment order by _id";
 		try {
 			return queryRunner.query(sql, new BeanListHandler<Adjustment>(Adjustment.class));
 		} catch (SQLException e) {

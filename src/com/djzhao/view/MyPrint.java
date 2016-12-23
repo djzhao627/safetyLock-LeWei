@@ -1,17 +1,17 @@
 package com.djzhao.view;
-import java.io.File;  
-import java.io.FileInputStream;  
-import javax.print.Doc;  
-import javax.print.DocFlavor;  
-import javax.print.DocPrintJob;  
-import javax.print.PrintService;  
-import javax.print.PrintServiceLookup;  
-import javax.print.ServiceUI;  
-import javax.print.SimpleDoc;  
-import javax.print.attribute.DocAttributeSet;  
-import javax.print.attribute.HashDocAttributeSet;  
+import java.io.File;
+import java.io.FileInputStream;
+
+import javax.print.Doc;
+import javax.print.DocFlavor;
+import javax.print.DocPrintJob;
+import javax.print.PrintService;
+import javax.print.PrintServiceLookup;
+import javax.print.ServiceUI;
+import javax.print.SimpleDoc;
+import javax.print.attribute.DocAttributeSet;
+import javax.print.attribute.HashDocAttributeSet;
 import javax.print.attribute.HashPrintRequestAttributeSet;  
-import javax.swing.JFileChooser;  
  
      
 public class MyPrint {  

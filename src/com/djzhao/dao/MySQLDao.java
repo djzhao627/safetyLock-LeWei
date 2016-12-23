@@ -30,10 +30,10 @@ public class MySQLDao {
 	 * @return
 	 */
 	public boolean insertPrintInfo(PrintInfo e) {
-		sql = "insert into hasprintedrecords (lineName, classes, productDate, salesNo, salesRow, serialNumber) values(?, ?, ?, ?, ?, ?)";
+		sql = "insert into hasprintedrecords (workStation, classes, productDate, salesNo, salesRow, serialNumber, materialNumberS, materialNumberT, materialDescS, materialDescT, customer) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		try {
-			return queryRunner.update(sql, e.getLineName(), e.getClasses(), e.getProductDate(), e.getSalesNo(),
-					e.getSalesRow(), e.getSerialNumber()) > 0;
+			return queryRunner.update(sql, e.getWorkStation(), e.getClasses(), e.getProductDate(), e.getSalesNo(),
+					e.getSalesRow(), e.getSerialNumber(), e.getMaterialNumberS(), e.getMaterialNumberT(), e.getMaterialDescS(), e.getMaterialDescT(), e.getCustomer()) > 0;
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 			throw new RuntimeException("打印记录无法存储！");

@@ -4,17 +4,13 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.print.Book;
 import java.awt.print.PageFormat;
 import java.awt.print.Paper;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
-import java.io.File;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
 import javax.print.PrintService;
 import javax.print.PrintServiceLookup;
 import javax.print.attribute.HashAttributeSet;
@@ -29,9 +25,18 @@ public class PrintfLabel implements Printable {
 
 	/** 生产日期 */
 	private String productDate = "161201";
-	
+
 	/** 产品编号 */
 	private String serialNumber = "AA.AP161201A001";
+
+	/** 产品名称 **/
+	private String productName = "AMDL";
+
+	/** 类型 **/
+	private String type = "层门锁";
+
+	/** 其他 */
+	private String other = "TSX F34002220160004";
 
 	/** 左边距 */
 	private double paddingLeft = 0;
@@ -39,6 +44,95 @@ public class PrintfLabel implements Printable {
 	/** 上边距 */
 	private double paddingTop = 0;
 
+	/**
+	 * @return the printerName
+	 */
+	public String getPrinterName() {
+		return printerName;
+	}
+
+	/**
+	 * @param printerName
+	 *            the printerName to set
+	 */
+	public void setPrinterName(String printerName) {
+		this.printerName = printerName;
+	}
+
+	/**
+	 * @return the productName
+	 */
+	public String getProductName() {
+		return productName;
+	}
+
+	/**
+	 * @param productName
+	 *            the productName to set
+	 */
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+
+	/**
+	 * @return the type
+	 */
+	public String getType() {
+		return type;
+	}
+
+	/**
+	 * @param type
+	 *            the type to set
+	 */
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	/**
+	 * @return the other
+	 */
+	public String getOther() {
+		return other;
+	}
+
+	/**
+	 * @param other
+	 *            the other to set
+	 */
+	public void setOther(String other) {
+		this.other = other;
+	}
+
+	/**
+	 * @return the paddingLeft
+	 */
+	public double getPaddingLeft() {
+		return paddingLeft;
+	}
+
+	/**
+	 * @param paddingLeft
+	 *            the paddingLeft to set
+	 */
+	public void setPaddingLeft(double paddingLeft) {
+		this.paddingLeft = paddingLeft;
+	}
+
+	/**
+	 * @return the paddingTop
+	 */
+	public double getPaddingTop() {
+		return paddingTop;
+	}
+
+	/**
+	 * @param paddingTop
+	 *            the paddingTop to set
+	 */
+	public void setPaddingTop(double paddingTop) {
+		this.paddingTop = paddingTop;
+	}
 
 	/**
 	 * @return the serialNumber
@@ -48,7 +142,8 @@ public class PrintfLabel implements Printable {
 	}
 
 	/**
-	 * @param serialNumber the serialNumber to set
+	 * @param serialNumber
+	 *            the serialNumber to set
 	 */
 	public void setSerialNumber(String serialNumber) {
 		this.serialNumber = serialNumber;
@@ -62,7 +157,8 @@ public class PrintfLabel implements Printable {
 	}
 
 	/**
-	 * @param productDate the productDate to set
+	 * @param productDate
+	 *            the productDate to set
 	 */
 	public void setProductDate(String productDate) {
 		this.productDate = productDate;
@@ -101,7 +197,6 @@ public class PrintfLabel implements Printable {
 		// 设置打印颜色为黑色
 		g2.setColor(Color.black);
 
-		
 		// 打印起点坐标
 		// double x = pf.getImageableX();
 		// double y = pf.getImageableY();
@@ -123,17 +218,25 @@ public class PrintfLabel implements Printable {
 			// -1- 用Graphics2D直接输出
 			// 首字符的基线(右下部)位于用户空间中的 (x, y) 位置处
 			// g2.drawLine(10,10,200,300);
-			Image codeImg = null;
-			try {
-				codeImg = ImageIO.read(new File("C:\\toolsZ\\codeZ\\Code128.png"));
-			} catch (IOException e) {
-				e.printStackTrace();
-				throw new RuntimeException("无法加载条码！");
-			}
+			// Image codeImg = null;
+			// try {
+			// codeImg = ImageIO.read(new
+			// File("C:\\toolsZ\\codeZ\\Code128.png"));
+			// } catch (IOException e) {
+			// e.printStackTrace();
+			// throw new RuntimeException("无法加载条码！");
+			// }
 
-			g2.drawString(productDate, (float) (Constants.LABELDATELEFT + 23.61), (float) (Constants.LABELDATETOP + 68));
+			g2.drawString(productName, (float) (Constants.LABELPRODUCTNAMELEFT + 23.61),
+					(float) (Constants.LABELPRODUCTNAMETOP + 41));
+			g2.drawString(type, (float) (Constants.LABELTYPELEFT + 23.61), (float) (Constants.LABELTYPETOP + 48));
+			g2.drawString(productDate, (float) (Constants.LABELDATELEFT + 23.61),
+					(float) (Constants.LABELDATETOP + 68));
 			g2.drawString(serialNumber, (float) (Constants.LABELSERLEFT + 23.61), (float) (Constants.LABELSERTOP + 75));
-			// g2.drawImage(codeImg, (int) (x + 14), (int) (y + 38), (int) (codeImg.getWidth(null) * 0.56), (int) (15), c);
+			g2.drawString(other, (float) (Constants.LABELOTHERLEFT + 23.61), (float) (Constants.LABELOTHERTOP + 84));
+
+			// g2.drawImage(codeImg, (int) (x + 14), (int) (y + 38), (int)
+			// (codeImg.getWidth(null) * 0.56), (int) (15), c);
 			return PAGE_EXISTS;
 		default:
 			return NO_SUCH_PAGE;
@@ -194,7 +297,7 @@ public class PrintfLabel implements Printable {
 
 		// 通俗理解就是书、文档
 		Book book = new Book();
-		
+
 		PageFormat pageFormat = new PageFormat();
 		// 打印方向
 		pageFormat.setOrientation(PageFormat.PORTRAIT);
@@ -220,6 +323,7 @@ public class PrintfLabel implements Printable {
 			printJob.setPrintService(printServices[0]);
 		} catch (PrinterException e1) {
 			e1.printStackTrace();
+			throw new RuntimeException(e1.getMessage());
 		}
 
 		// 设置打印类
