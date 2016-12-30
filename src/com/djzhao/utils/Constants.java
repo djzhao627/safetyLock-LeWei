@@ -26,6 +26,9 @@ public class Constants {
 	/** 已经选择的线别索引 */
 	public static int SELECTEDLINEINDEX = 0;
 	
+	/** 已经选择的线别（工位）名称 */
+	public static String SELECTEDWORKSTATION = "";
+	
 	/** 日期上边距 */
 	public static double LABELDATETOP = 0;
 	

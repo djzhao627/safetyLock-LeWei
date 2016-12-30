@@ -97,6 +97,7 @@ public class ExcelUtil {
 	 * @throws IOException
 	 * @throws FileNotFoundException
 	 */
+	@SuppressWarnings("deprecation")
 	private static List<PrintInfo> read2003Excel(File file) throws IOException {
 		List<PrintInfo> list = new ArrayList<PrintInfo>();
 		HSSFWorkbook hwb = new HSSFWorkbook(new FileInputStream(file));
@@ -117,6 +118,10 @@ public class ExcelUtil {
 			String str = "";
 			// 生产日期
 			cell = row.getCell(0);
+			if (cell == null) {
+				continue;
+			}
+			cell.setCellType(CellType.NUMERIC);
 			str = sdf.format(cell.getDateCellValue());
 			printInfo.setProductDate(str);
 
@@ -190,6 +195,7 @@ public class ExcelUtil {
 	/**
 	 * 读取Office 2007 excel
 	 */
+	@SuppressWarnings("deprecation")
 	private static List<PrintInfo> read2007Excel(File file){
 		try {
 			List<PrintInfo> list = new ArrayList<PrintInfo>();
@@ -209,6 +215,10 @@ public class ExcelUtil {
 				String str = "";
 				// 生产日期
 				cell = row.getCell(0);
+//				cell.setCellType(CellType.NUMERIC);
+				if (cell == null) {
+					continue;
+				}
 				str = sdf.format(cell.getDateCellValue());
 				printInfo.setProductDate(str);
 

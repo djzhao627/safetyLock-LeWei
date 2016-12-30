@@ -11,6 +11,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.print.DocFlavor;
@@ -29,6 +32,7 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
 import com.djzhao.dao.MySQLDao;
 import com.djzhao.dao.SqliteDao;
@@ -39,6 +43,9 @@ import com.djzhao.utils.Constants;
 import com.djzhao.utils.ExcelFileFilter;
 import com.djzhao.utils.ExcelUtil;
 import javax.swing.SwingConstants;
+import javax.swing.JTable;
+import java.awt.Cursor;
+import javax.swing.JScrollPane;
 
 /**
  * 主界面。
@@ -46,16 +53,12 @@ import javax.swing.SwingConstants;
  * @author djzhao
  * @time 2016年11月24日 上午9:28:05
  */
-public class MainView extends JFrame {
+public class MainView_planB extends JFrame {
 
 	private static final long serialVersionUID = -1715638341393673991L;
 	private JPanel contentPane;
 	/** Excel文件路径 */
 	private JTextField dataFilePath;
-	/** 标签日期 */
-	private JTextField labelDate;
-	/** 标签序列号 */
-	private JTextField labelSer;
 	/** 文件选择器 */
 	JFileChooser jfc = new JFileChooser();
 	private static DefaultComboBoxModel<String> aModel = new DefaultComboBoxModel<>();
@@ -66,9 +69,19 @@ public class MainView extends JFrame {
 	private JButton btnAdjust;
 	private JButton btnReprint;
 	private JLabel printProcess;
-	private JTextField labelProductName;
-	private JTextField labelType;
-	private JTextField labelOther;
+	private JComboBox<String> comboBoxClazz;
+	private JLabel label_3;
+	
+	/** JTable数据头 */
+	private String[] heads = { "班次", "工位", "物料号T", "物料描述T", "销售订单号", "销售订单行", "S物料号", "物料描述S", "数量", "客户"};
+	/** JTable数据模型 */
+	DefaultTableModel tableModel = new DefaultTableModel(null, heads);
+	private JTable tableList;
+	private JComboBox<String> comboBoxCustomer;
+	private List<PrintInfo> list = null;
+	
+	/** 已经选择的行数 **/
+	private int[] selectedRow = null;
 
 	/**
 	 * Launch the application.
@@ -77,7 +90,7 @@ public class MainView extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MainView frame = new MainView();
+					MainView_planB frame = new MainView_planB();
 					frame.setVisible(true);
 					// getDefaultSelectedLine();
 					setPrinterModel();
@@ -144,17 +157,17 @@ public class MainView extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public MainView() {
+	public MainView_planB() {
 		// 不可改变窗口大小
 		setResizable(false);
 		// 设置图标
-		setIconImage(Toolkit.getDefaultToolkit().getImage(MainView.class.getResource("/images/Wittur_Logo.gif")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(MainView_planB.class.getResource("/images/Wittur_Logo.gif")));
 		// 设置标题
 		setTitle("安全锁标签");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		double screenWidth = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
 		double screenHeight = Toolkit.getDefaultToolkit().getScreenSize().getHeight();
-		setBounds((int) ((screenWidth - 400) / 2), (int) ((screenHeight - 300) / 2), 400, 334);
+		setBounds((int) ((screenWidth - 700) / 2), (int) ((screenHeight - 350) / 2), 700, 350);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -205,63 +218,12 @@ public class MainView extends JFrame {
 		});
 		btnChoose.setOpaque(false);
 		btnChoose.setFont(new Font("SimSun", Font.PLAIN, 12));
-		btnChoose.setBounds(304, 6, 80, 23);
+		btnChoose.setBounds(304, 9, 80, 23);
 		contentPane.add(btnChoose);
 
 		JSeparator separator = new JSeparator();
-		separator.setBounds(10, 260, 374, 2);
+		separator.setBounds(10, 276, 674, 2);
 		contentPane.add(separator);
-
-		JLabel label_1 = new JLabel("\u4EA7\u54C1\u540D\u79F0\uFF1A");
-		label_1.setFont(new Font("SimSun", Font.PLAIN, 12));
-		label_1.setBounds(10, 58, 70, 15);
-		contentPane.add(label_1);
-
-		// lineName = new JComboBox<String>();
-		// lineName.addItemListener(new ItemListener() {
-		// public void itemStateChanged(ItemEvent e) {
-		// // 设置默认线别
-		// if (e.getStateChange() == ItemEvent.SELECTED) {
-		// Constants.SELECTEDLINEINDEX = lineName.getSelectedIndex();
-		// SqliteDao sqliteDao = new SqliteDao();
-		// try {
-		// sqliteDao.setDefaultSelectedLine(lineName.getSelectedIndex());
-		// } catch (Exception e1) {
-		// e1.printStackTrace();
-		// JOptionPane.showMessageDialog(null, e1.getMessage());
-		// }
-		// }
-		// }
-		// });
-		// lineName.setFont(new Font("SimSun", Font.PLAIN, 12));
-		// lineName.setModel(new
-		// DefaultComboBoxModel<String>(Constants.LINENAME));
-		// lineName.setBounds(90, 54, 200, 21);
-		// contentPane.add(lineName);
-
-		JLabel label_2 = new JLabel("\u751F\u4EA7\u65E5\u671F\uFF1A");
-		label_2.setFont(new Font("宋体", Font.PLAIN, 12));
-		label_2.setBounds(10, 128, 70, 15);
-		contentPane.add(label_2);
-
-		labelDate = new JTextField();
-		labelDate.setOpaque(false);
-		labelDate.setEnabled(false);
-		labelDate.setBounds(90, 125, 200, 21);
-		contentPane.add(labelDate);
-		labelDate.setColumns(10);
-
-		JLabel label_3 = new JLabel("\u4EA7\u54C1\u7F16\u53F7\uFF1A");
-		label_3.setFont(new Font("宋体", Font.PLAIN, 12));
-		label_3.setBounds(10, 163, 70, 15);
-		contentPane.add(label_3);
-
-		labelSer = new JTextField();
-		labelSer.setOpaque(false);
-		labelSer.setEnabled(false);
-		labelSer.setColumns(10);
-		labelSer.setBounds(90, 160, 200, 21);
-		contentPane.add(labelSer);
 
 		btnAdjust = new JButton("\u8C03\u6574\u6807\u7B7E");
 		btnAdjust.addMouseListener(new MouseAdapter() {
@@ -273,14 +235,14 @@ public class MainView extends JFrame {
 		});
 		btnAdjust.setFont(new Font("SimSun", Font.PLAIN, 12));
 		btnAdjust.setOpaque(false);
-		btnAdjust.setBounds(10, 272, 93, 23);
+		btnAdjust.setBounds(10, 288, 93, 23);
 		contentPane.add(btnAdjust);
 
 		btnReprint = new JButton("\u8865\u6253\u5370");
 		btnReprint.setEnabled(false);
 		btnReprint.setFont(new Font("SimSun", Font.PLAIN, 12));
 		btnReprint.setOpaque(false);
-		btnReprint.setBounds(113, 272, 93, 23);
+		btnReprint.setBounds(113, 288, 93, 23);
 		contentPane.add(btnReprint);
 
 		btnPrint = new JButton("\u6253\u5370");
@@ -288,6 +250,12 @@ public class MainView extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (btnPrint.isEnabled()) {
+					selectedRow = tableList.getSelectedRows();
+					
+					if (selectedRow.length == 0) {
+						JOptionPane.showMessageDialog(null, "请先选择要打印的记录！");
+						return;
+					}
 					// 设置不可进行其他操作
 					setUnableOperator();
 					// 打印
@@ -296,12 +264,12 @@ public class MainView extends JFrame {
 			}
 		});
 		btnPrint.setFont(new Font("SimSun", Font.PLAIN, 12));
-		btnPrint.setBounds(304, 227, 80, 23);
+		btnPrint.setBounds(604, 288, 80, 23);
 		contentPane.add(btnPrint);
 
 		JLabel label_4 = new JLabel("\u6253 \u5370 \u673A\uFF1A");
 		label_4.setFont(new Font("宋体", Font.PLAIN, 12));
-		label_4.setBounds(10, 231, 70, 15);
+		label_4.setBounds(310, 291, 70, 15);
 		contentPane.add(label_4);
 
 		printerSelector = new JComboBox<String>();
@@ -322,44 +290,177 @@ public class MainView extends JFrame {
 		printerSelector.setForeground(Color.BLACK);
 		printerSelector.setFont(new Font("宋体", Font.ITALIC, 12));
 		printerSelector.setModel(aModel);
-		printerSelector.setBounds(90, 229, 200, 21);
+		printerSelector.setBounds(390, 289, 200, 21);
 		contentPane.add(printerSelector);
 
 		printProcess = new JLabel("");
 		printProcess.setFont(new Font("宋体", Font.ITALIC, 12));
 		printProcess.setHorizontalAlignment(SwingConstants.RIGHT);
-		printProcess.setBounds(279, 280, 105, 15);
+		printProcess.setBounds(579, 46, 105, 15);
 		contentPane.add(printProcess);
 		
-		labelProductName = new JTextField();
-		labelProductName.setEditable(false);
-		labelProductName.setBounds(90, 55, 200, 21);
-		contentPane.add(labelProductName);
-		labelProductName.setColumns(10);
+		comboBoxClazz = new JComboBox<String>();
+		comboBoxClazz.setModel(new DefaultComboBoxModel<String>(new String[] {"\u65E9", "\u4E2D", "\u665A"}));
+		comboBoxClazz.setForeground(Color.BLACK);
+		comboBoxClazz.setFont(new Font("宋体", Font.ITALIC, 12));
+		comboBoxClazz.setBounds(90, 40, 50, 21);
+		contentPane.add(comboBoxClazz);
 		
-		labelType = new JTextField();
-		labelType.setEditable(false);
-		labelType.setColumns(10);
-		labelType.setBounds(90, 90, 200, 21);
-		contentPane.add(labelType);
+		JLabel label_1 = new JLabel("\u73ED    \u6B21\uFF1A");
+		label_1.setFont(new Font("宋体", Font.PLAIN, 12));
+		label_1.setBounds(10, 41, 70, 21);
+		contentPane.add(label_1);
 		
-		JLabel label_5 = new JLabel("\u7C7B    \u578B\uFF1A");
-		label_5.setFont(new Font("宋体", Font.PLAIN, 12));
-		label_5.setBounds(10, 93, 70, 15);
-		contentPane.add(label_5);
+		JLabel label_2 = new JLabel("\u5BA2    \u6237\uFF1A");
+		label_2.setFont(new Font("宋体", Font.PLAIN, 12));
+		label_2.setBounds(179, 40, 70, 21);
+		contentPane.add(label_2);
 		
-		labelOther = new JTextField();
-		labelOther.setEditable(false);
-		labelOther.setColumns(10);
-		labelOther.setBounds(90, 195, 200, 21);
-		contentPane.add(labelOther);
+		comboBoxCustomer = new JComboBox<String>();
+		comboBoxCustomer.setForeground(Color.BLACK);
+		comboBoxCustomer.setFont(new Font("宋体", Font.ITALIC, 12));
+		comboBoxCustomer.setBounds(259, 39, 126, 21);
+		contentPane.add(comboBoxCustomer);
 		
-		JLabel lblCertificate = new JLabel("\u8BC1    \u4E66\uFF1A");
-		lblCertificate.setFont(new Font("宋体", Font.PLAIN, 12));
-		lblCertificate.setBounds(10, 198, 70, 15);
-		contentPane.add(lblCertificate);
+		JButton button = new JButton("\u641C\u7D22");
+		button.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if ( list == null || list.size() <= 0) {
+					JOptionPane.showMessageDialog(null, "请先刷新数据！");
+					return;
+				}
+				
+				searchDataInList();
+			}
+
+		});
+		button.setFont(new Font("宋体", Font.PLAIN, 12));
+		button.setBounds(393, 38, 93, 23);
+		contentPane.add(button);
+		
+		label_3 = new JLabel("\u5237\u65B0");
+		label_3.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO
+				File path = new File(dataFilePath.getText().toString());
+				if (!path.exists()) {
+					JOptionPane.showMessageDialog(null, "数据文件路径无效！");
+					return;
+				}
+				// 更新列表
+				updateTableList(path);
+			}
+		});
+		label_3.setForeground(new Color(255, 140, 0));
+		label_3.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		label_3.setFont(new Font("宋体", Font.ITALIC, 13));
+		label_3.setHorizontalAlignment(SwingConstants.CENTER);
+		label_3.setBounds(394, 10, 92, 19);
+		contentPane.add(label_3);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 74, 674, 192);
+		contentPane.add(scrollPane);
+		
+		tableList = new JTable();
+		tableList.setModel(new DefaultTableModel(
+			new Object[][] {}, heads));
+		scrollPane.setViewportView(tableList);
 	}
 
+	/**
+	 * 在集合中搜索数据
+	 */
+	private void searchDataInList() {
+		String clazz = (String) comboBoxClazz.getSelectedItem();
+		String customer = (String) comboBoxCustomer.getSelectedItem();
+		List<PrintInfo> tempList = new ArrayList<PrintInfo>();
+		for (int i = 0; i < list.size(); i++) {
+			if (list.get(i).getClasses().equals(clazz) && list.get(i).getCustomer().equals(customer)) {
+				tempList.add(list.get(i));
+			}
+		}
+		if (tempList.size() == 0) {
+			JOptionPane.showMessageDialog(null, "没有匹配的结果！");
+			return;
+		}
+		Object[][] data = new Object[tempList.size()][10];
+		for (int i = 0; i < tempList.size(); i++) {
+			data[i][0] = tempList.get(i).getClasses();
+			data[i][1] = tempList.get(i).getWorkStation();
+			data[i][2] = tempList.get(i).getMaterialNumberT();
+			data[i][3] = tempList.get(i).getMaterialDescT();
+			data[i][4] = tempList.get(i).getSalesNo();
+			data[i][5] = tempList.get(i).getSalesRow();
+			data[i][6] = tempList.get(i).getMaterialNumberS();
+			data[i][7] = tempList.get(i).getMaterialDescS();
+			data[i][8] = tempList.get(i).getNumber();
+			data[i][9] = tempList.get(i).getCustomer();
+		}
+		// 列表更新
+		tableModel = new DefaultTableModel(data, heads);
+		tableList.setModel(tableModel);
+	}
+	
+	/**
+	 * 更新tableList。
+	 */
+	private void updateTableList(File path) {
+		// 获取信息
+		try {
+			list = ExcelUtil.readExcel(path);
+			if (list.size() > 0) {
+				HashSet<String> clazzSet = new HashSet<String>();
+				HashSet<String> customerSet = new HashSet<String>();
+				Object[][] data = new Object[list.size()][10];
+				for (int i = 0; i < list.size(); i++) {
+					data[i][0] = list.get(i).getClasses();
+					// 班次下拉框值
+					clazzSet.add(list.get(i).getClasses());
+					data[i][1] = list.get(i).getWorkStation();
+					data[i][2] = list.get(i).getMaterialNumberT();
+					data[i][3] = list.get(i).getMaterialDescT();
+					data[i][4] = list.get(i).getSalesNo();
+					data[i][5] = list.get(i).getSalesRow();
+					data[i][6] = list.get(i).getMaterialNumberS();
+					data[i][7] = list.get(i).getMaterialDescS();
+					data[i][8] = list.get(i).getNumber();
+					data[i][9] = list.get(i).getCustomer();
+					// 客户下拉列表值
+					customerSet.add(list.get(i).getCustomer());
+				}
+				String[] items = new String[clazzSet.size()];
+				int i = 0;
+				for (String s : clazzSet) {
+					items[i++] = s;
+				}
+				// 设置班次
+				comboBoxClazz.setModel(new DefaultComboBoxModel<String>(items));
+				
+				items = new String[customerSet.size()];
+				i = 0;
+				for (String s : customerSet) {
+					items[i++] = s;
+				}
+				// 设置客户
+				comboBoxCustomer.setModel(new DefaultComboBoxModel<String>(items));
+				
+				// 列表更新
+				tableModel = new DefaultTableModel(data, heads);
+				tableList.setModel(tableModel);
+			} else {
+				JOptionPane.showMessageDialog(null, "无数据！");
+			}
+			
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, e.getMessage());
+		}
+	}
+	
 	/**
 	 * 设置不可继续操作。
 	 */
@@ -413,18 +514,22 @@ public class MainView extends JFrame {
 			@Override
 			protected Void doInBackground() {
 				try {
-					File path = new File(dataFilePath.getText().toString());
-					if (!path.exists()) {
-						JOptionPane.showMessageDialog(null, "数据文件路径无效！");
-						return null;
-					}
+					// File path = new File(dataFilePath.getText().toString());
+					// if (!path.exists()) {
+					// JOptionPane.showMessageDialog(null, "数据文件路径无效！");
+					// return null;
+					// }
 					// 设置已选线别
 					// Constants.SELECTEDLINEINDEX =
 					// lineName.getSelectedIndex();
-					// 获取信息
-					List<PrintInfo> list = ExcelUtil.readExcel(path);
+					// TODO 获取信息
+					// List<PrintInfo> list = ExcelUtil.readExcel(path);
+					List<PrintInfo> selectedList = new ArrayList<PrintInfo>();
+					for (int i : selectedRow) {
+						selectedList.add(list.get(i));
+					}
 					// System.out.println(list);
-					if (list.size() > 0) {
+					if (selectedList.size() > 0) {
 						// 实例化打印机对象
 						PrintfLabel print = new PrintfLabel(printerSelector.getSelectedItem().toString());
 						
@@ -455,7 +560,7 @@ public class MainView extends JFrame {
 							JOptionPane.showMessageDialog(null, "设置字体大小出现问题：\n" + e.getMessage());
 						}
 						
-						for (PrintInfo p : list) {
+						for (PrintInfo p : selectedList) {
 							
 							// 产生额外信息
 							print = generateOtherInfo(print, p);
@@ -465,22 +570,29 @@ public class MainView extends JFrame {
 							
 							int number = p.getNumber();
 							MySQLDao md = new MySQLDao();
+							
+							// 设置已经选择的工位
+							Constants.SELECTEDWORKSTATION = p.getWorkStation().trim();
+							if (Constants.SELECTEDWORKSTATION.equals("")) {
+								JOptionPane.showMessageDialog(null, "工位信息错误");
+								return null;
+							}
 							// 获取序列号
 							if (md.getSerialNumber(number)) {
-								// label生产日期
-								labelDate.setText(p.getProductDate());
-								// label产品名
-								labelProductName.setText(print.getProductName());
-								// label类型
-								labelType.setText(print.getType());
-								// label证书
-								labelOther.setText(print.getOther());
+								// TODO label生产日期
+								// labelDate.setText(p.getProductDate());
+								// TODO label产品名
+								// labelProductName.setText(print.getProductName());
+								// TODO label类型
+								// labelType.setText(print.getType());
+								// TODO label证书
+								// labelOther.setText(print.getOther());
 								for (int i = 0; i < number; i++) {
 									// 设置序列号
 									p.setSerialNumber(formatWorkStation(p.getWorkStation()) + p.getClasses() + p.getProductDate()
 											+ serialNumberLengthFormat(Constants.SERIALNUMBER++));
-									// label产品编号
-									labelSer.setText(p.getSerialNumber());
+									// TODO label产品编号
+									// labelSer.setText(p.getSerialNumber());
 									
 									// 设置 标签的编号
 									print.setSerialNumber(p.getSerialNumber());
@@ -502,9 +614,6 @@ public class MainView extends JFrame {
 					return null;
 				} catch (HeadlessException e) {
 					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-					JOptionPane.showMessageDialog(null, "IO异常！");
 				} catch (NullPointerException e) {
 					e.printStackTrace();
 					JOptionPane.showMessageDialog(null, "数据信息不匹配！");
@@ -514,6 +623,8 @@ public class MainView extends JFrame {
 				} finally {
 					// 设置为可以继续操作
 					setEnableOperator();
+					// 设置已经选择的行数
+					selectedRow = null;
 				}
 				return null;
 			}

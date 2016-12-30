@@ -231,9 +231,9 @@ public class PrintfLabel implements Printable {
 					(float) (Constants.LABELPRODUCTNAMETOP + 41));
 			g2.drawString(type, (float) (Constants.LABELTYPELEFT + 23.61), (float) (Constants.LABELTYPETOP + 48));
 			g2.drawString(productDate, (float) (Constants.LABELDATELEFT + 23.61),
-					(float) (Constants.LABELDATETOP + 68));
-			g2.drawString(serialNumber, (float) (Constants.LABELSERLEFT + 23.61), (float) (Constants.LABELSERTOP + 75));
-			g2.drawString(other, (float) (Constants.LABELOTHERLEFT + 23.61), (float) (Constants.LABELOTHERTOP + 84));
+					(float) (Constants.LABELDATETOP + 58));
+			g2.drawString(serialNumber, (float) (Constants.LABELSERLEFT + 23.61), (float) (Constants.LABELSERTOP + 65));
+			g2.drawString(other, (float) (Constants.LABELOTHERLEFT + 23.61), (float) (Constants.LABELOTHERTOP + 74));
 
 			// g2.drawImage(codeImg, (int) (x + 14), (int) (y + 38), (int)
 			// (codeImg.getWidth(null) * 0.56), (int) (15), c);

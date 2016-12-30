@@ -49,20 +49,20 @@ public class MySQLDao {
 	 */
 	public boolean getSerialNumber(int num) {
 		String today = sdf.format(new Date());
-		sql = "select serialNumber from SerialNumber where printDate = ? and lineNameId = ?";
+		sql = "select serialNumber from SerialNumber where printDate = ? and workStation = ?";
 		try {
 			Integer count = null;
-			count = queryRunner.query(sql, new ScalarHandler<Integer>(), today, Constants.SELECTEDLINEINDEX);
+			count = queryRunner.query(sql, new ScalarHandler<Integer>(), today, Constants.SELECTEDWORKSTATION);
 			// 存在记录
 			if (count != null) {
-				sql = "update SerialNumber set serialNumber = serialNumber + ? where printDate = ? and lineNameId = ?";
+				sql = "update SerialNumber set serialNumber = serialNumber + ? where printDate = ? and workStation = ?";
 				Constants.SERIALNUMBER = count + 1;
-				return queryRunner.update(sql, num, today, Constants.SELECTEDLINEINDEX) > 0;
+				return queryRunner.update(sql, num, today, Constants.SELECTEDWORKSTATION) > 0;
 			} else {// 不存在记录
-				sql = "insert into SerialNumber (printDate, lineNameId, serialNumber) values(?, ?, ?)";
+				sql = "insert into SerialNumber (printDate, workStation, serialNumber) values(?, ?, ?)";
 				// 序列号从1开始
 				Constants.SERIALNUMBER = 1;
-				return queryRunner.update(sql, today, Constants.SELECTEDLINEINDEX, num) > 0;
+				return queryRunner.update(sql, today, Constants.SELECTEDWORKSTATION, num) > 0;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
